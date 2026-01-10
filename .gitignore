@@ -2,7 +2,7 @@
 __pycache__/
 *.pyc
 cache/
-frontend-web/node_modules/
+**/node_modules/
 frontend-web/dist/
 *.log
 .DS_Store

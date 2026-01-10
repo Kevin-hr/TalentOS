@@ -9,8 +9,8 @@ import { useAnalyzeStream } from '@/hooks/useAnalyzeStream'
 import ThumbnailPreview from '@/components/ThumbnailPreview'
 import { RoleSelector } from '@/components/RoleSelector'
 import { HRDashboard } from '@/components/HRDashboard'
+import { SmartSearch } from '@/components/CandidateSearch'
 import { useUserRole } from '@/hooks/useUserRole'
-
 import { ErrorDisplay } from '@/components/ErrorDisplay'
 
 interface AnalysisResult {
@@ -38,6 +38,7 @@ function App() {
   const [persona, setPersona] = useState('hrbp')
   const [result, setResult] = useState<AnalysisResult | null>(null)
   const [validationError, setValidationError] = useState('')
+  const [activeTab, setActiveTab] = useState<'analyze' | 'search'>('analyze')
 
   const { streamedContent, isStreaming, error, analyzeStream, reset } = useAnalyzeStream()
 
@@ -110,14 +111,36 @@ function App() {
             <h1 className="text-3xl font-bold tracking-tight">HRD的黑匣子</h1>
             <p className="text-gray-500 font-medium">15年HRD经验训练</p>
           </div>
-          <Button variant="ghost" onClick={clearRole} className="rounded-full flex items-center gap-2 hover:bg-gray-200/50">
-            <span className="text-sm font-medium text-gray-500">当前身份: 求职者</span>
-            <div className="w-8 h-8 bg-[#34D399]/20 text-[#34D399] rounded-full overflow-hidden flex items-center justify-center">
-                 <RefreshCw className="w-4 h-4" />
+          <div className="flex items-center gap-4">
+            <div className="bg-white p-1 rounded-full border border-gray-200 flex items-center shadow-sm">
+                 <button 
+                    onClick={() => setActiveTab('analyze')}
+                    className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${activeTab === 'analyze' ? 'bg-black text-white shadow-md' : 'text-gray-500 hover:text-gray-900'}`}
+                 >
+                    简历诊断
+                 </button>
+                 <button 
+                    onClick={() => setActiveTab('search')}
+                    className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${activeTab === 'search' ? 'bg-black text-white shadow-md' : 'text-gray-500 hover:text-gray-900'}`}
+                 >
+                    {role === 'hr' ? '人才库搜索' : '职位智能匹配'}
+                 </button>
             </div>
-          </Button>
+
+            <Button variant="ghost" onClick={clearRole} className="rounded-full flex items-center gap-2 hover:bg-gray-200/50">
+                <span className="text-sm font-medium text-gray-500">当前身份: {role === 'hr' ? 'HRD' : '求职者'}</span>
+                <div className="w-8 h-8 bg-[#34D399]/20 text-[#34D399] rounded-full overflow-hidden flex items-center justify-center">
+                    <RefreshCw className="w-4 h-4" />
+                </div>
+            </Button>
+          </div>
         </header>
 
+        {activeTab === 'search' ? (
+             <div className="max-w-4xl mx-auto">
+                <SmartSearch mode={role === 'hr' ? 'candidate' : 'job'} />
+             </div>
+        ) : (
         <main className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
           {/* Left Column: Inputs */}
@@ -313,6 +336,7 @@ function App() {
           </div>
 
         </main>
+        )}
       </div>
     </div>
   )

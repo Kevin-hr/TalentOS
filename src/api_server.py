@@ -77,6 +77,24 @@ class HealthCheckResponse(BaseModel):
     engine_status: Dict[str, Any]
     version: str
 
+class SearchRequest(BaseModel):
+    query: str
+    limit: int = 5
+
+class SearchResultItem(BaseModel):
+    id: str
+    score: float
+    metadata: Optional[Dict[str, Any]] = None
+    preview: str
+
+class SearchResponse(BaseModel):
+    results: List[SearchResultItem]
+    count: int
+
+class IndexRequest(BaseModel):
+    text: str
+    metadata: Optional[Dict[str, Any]] = None
+
 # --- Helper Functions ---
 
 def get_file_extension(filename: str) -> str:
@@ -495,6 +513,57 @@ async def translate_text(request: TranslationRequest):
         return {"translated_text": translated}
     except Exception as e:
         logger.error(f"Translation error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/search", response_model=SearchResponse)
+async def search_candidates(req: SearchRequest):
+    """
+    Search for candidates using natural language query.
+    """
+    if not engine:
+        raise HTTPException(status_code=503, detail="Engine not initialized")
+    
+    try:
+        # Check if vector store is enabled
+        status = engine.health_check()
+        if not status["vector_store"]["enabled"]:
+             raise HTTPException(status_code=501, detail="Vector store not enabled")
+
+        results = engine.search_candidates(req.query, limit=req.limit)
+        
+        # Convert to response model
+        items = [
+            SearchResultItem(
+                id=r["id"],
+                score=r["score"],
+                metadata=r["metadata"],
+                preview=r["preview"]
+            ) for r in results
+        ]
+        
+        return SearchResponse(results=items, count=len(items))
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Search error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/index_text")
+async def index_candidate_text(req: IndexRequest):
+    """
+    Index a candidate's resume text manually.
+    """
+    if not engine:
+        raise HTTPException(status_code=503, detail="Engine not initialized")
+        
+    try:
+        success = engine.index_resume(req.text, metadata=req.metadata)
+        if success:
+            return {"status": "success", "message": "Resume indexed successfully"}
+        else:
+            raise HTTPException(status_code=500, detail="Failed to index resume")
+    except Exception as e:
+        logger.error(f"Indexing error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":

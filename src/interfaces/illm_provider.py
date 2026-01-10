@@ -93,6 +93,19 @@ class ILLMProvider(ABC):
         pass
 
     @abstractmethod
+    def embed(self, text: str) -> list[float]:
+        """
+        Generate embedding vector for text.
+        
+        Args:
+            text: Input text to embed
+            
+        Returns:
+            List of floats representing the embedding vector
+        """
+        pass
+
+    @abstractmethod
     def is_available(self) -> bool:
         """Check if provider is properly configured and ready."""
         pass

@@ -273,6 +273,13 @@ class AnthropicProvider(ILLMProvider):
         except Exception:
             return False
 
+    def embed(self, text: str) -> list[float]:
+        """
+        Anthropic does not provide an embedding API in this SDK.
+        This method will raise an error.
+        """
+        raise NotImplementedError("Anthropic does not support embeddings. Please use OpenAI provider for RAG features.")
+
     def is_available(self) -> bool:
         """Check if provider is properly configured."""
         return self._client is not None

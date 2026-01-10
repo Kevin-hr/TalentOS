@@ -291,6 +291,13 @@ class DeepSeekProvider(ILLMProvider):
         except Exception:
             return False
 
+    def embed(self, text: str) -> list[float]:
+        """
+        DeepSeek currently does not provide an embedding API.
+        This method will raise an error.
+        """
+        raise NotImplementedError("DeepSeek does not support embeddings. Please use OpenAI provider for RAG features.")
+
     def is_available(self) -> bool:
         """Check if provider is properly configured."""
         return self._client is not None

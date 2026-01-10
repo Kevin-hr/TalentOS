@@ -220,6 +220,22 @@ class OpenAIProvider(ILLMProvider):
         except Exception:
             return False
 
+    def embed(self, text: str) -> list[float]:
+        """Generate embedding using OpenAI API."""
+        if not self.is_available():
+             raise LLMAuthenticationError("OpenAI API key not configured.")
+        
+        try:
+            # Use text-embedding-3-small as default for cost/performance balance
+            response = self._client.embeddings.create(
+                input=text,
+                model="text-embedding-3-small"
+            )
+            return response.data[0].embedding
+        except Exception as e:
+            # Wrap error
+            raise LLMAPIError(f"Embedding failed: {e}")
+
     def is_available(self) -> bool:
         """Check if provider is properly configured."""
         return self._client is not None

@@ -34,9 +34,11 @@ from src.core.exceptions import (
 from src.interfaces.illm_provider import ILLMProvider, LLMResponse
 from src.interfaces.idocument_parser import IDocumentParser, ParsedDocument
 from src.interfaces.istorage import IStorage
+from src.interfaces.ivector_store import IVectorStore
 from src.plugins.llm_providers import get_provider as get_llm_provider
 from src.plugins.document_parsers import get_parser_for_file
 from src.plugins.storage import get_storage
+from src.plugins.vector_stores.simple_store import SimpleVectorStore
 
 
 @dataclass
@@ -78,11 +80,18 @@ class TalentOSEngine:
         self._config = config or get_config()
         self._llm_provider: Optional[ILLMProvider] = None
         self._storage: Optional[IStorage] = None
+        self._vector_store: Optional[IVectorStore] = None
         self._personas = self._load_personas()
 
         # Initialize components
         self._setup_llm_provider(kwargs.get('llm_provider'))
         self._setup_storage()
+        self._setup_vector_store()
+
+    def _setup_vector_store(self):
+        """Initialize vector store."""
+        # For now, hardcode SimpleVectorStore. In future, load from config.
+        self._vector_store = SimpleVectorStore()
 
     def _load_personas(self) -> Dict:
         """Load available analysis personas."""
@@ -588,7 +597,7 @@ class TalentOSEngine:
         Args:
             resume_text: Resume content as text
             jd_text: Job description content as text
-            persona: Analysis persona ("hrbp" or "coach")
+            persona: Analysis persona ("hrbp" or "candidate")
             use_cache: Whether to use cached results
             **kwargs: Additional parameters (temperature, model, etc.)
 
@@ -1086,6 +1095,10 @@ LANGUAGE: Chinese (Simplified).
                 "enabled": self._storage is not None,
                 "healthy": False,
                 "error": None
+            },
+            "vector_store": {
+                "enabled": self._vector_store is not None,
+                "healthy": True # Simple store is always healthy if initialized
             }
         }
 
@@ -1109,6 +1122,83 @@ LANGUAGE: Chinese (Simplified).
                 status["storage"]["error"] = str(e)
 
         return status
+
+    # --- RAG Features ---
+
+    def index_resume(self, resume_text: str, metadata: Dict[str, Any] = None) -> bool:
+        """
+        Index a resume into the vector store.
+        
+        Args:
+            resume_text: Content of the resume
+            metadata: Optional metadata (filename, etc.)
+            
+        Returns:
+            bool: True if successful
+        """
+        if not self._vector_store:
+            return False
+            
+        if not metadata:
+            metadata = {}
+            
+        # Generate ID (hash of content)
+        doc_id = hashlib.md5(resume_text.encode('utf-8')).hexdigest()
+        
+        # Generate Embedding
+        embedding = None
+        if self._llm_provider:
+            try:
+                embedding = self._llm_provider.embed(resume_text)
+            except NotImplementedError:
+                 # Warn but proceed without embedding (content only storage)
+                 # print("Warning: LLM Provider does not support embeddings. Indexing content only.")
+                 pass
+            except Exception as e:
+                print(f"Embedding failed: {e}")
+            
+        from src.interfaces.ivector_store import VectorDocument
+        doc = VectorDocument(
+            id=doc_id,
+            content=resume_text,
+            metadata=metadata,
+            embedding=embedding
+        )
+        
+        return self._vector_store.add_documents([doc])
+
+    def search_candidates(self, query: str, limit: int = 5) -> List[Dict]:
+        """
+        Search for candidates using semantic search.
+        
+        Args:
+            query: Natural language query (e.g. "Java expert with cloud exp")
+            limit: Max results
+            
+        Returns:
+            List of result dicts
+        """
+        if not self._vector_store:
+            raise TalentOSError("Vector store not initialized")
+            
+        if not self._llm_provider:
+             raise TalentOSError("LLM provider not initialized")
+
+        try:
+            query_embedding = self._llm_provider.embed(query)
+        except NotImplementedError:
+            raise TalentOSError("Current LLM provider does not support embeddings.")
+        except Exception as e:
+            raise TalentOSError(f"Search failed: {e}")
+            
+        results = self._vector_store.search(query_embedding, limit=limit)
+        
+        return [{
+            "id": r.document.id,
+            "score": r.score,
+            "metadata": r.document.metadata,
+            "preview": r.document.content[:200] + "..."
+        } for r in results]
 
 
 def create_engine(config_path: str = None, **kwargs) -> TalentOSEngine:
