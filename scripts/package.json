@@ -1,0 +1,13 @@
+{
+  "name": "talentos-scripts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Automation scripts for TalentOS",
+  "type": "module",
+  "scripts": {
+    "render-assets": "node render_assets.js"
+  },
+  "devDependencies": {
+    "puppeteer": "^22.0.0"
+  }
+}
