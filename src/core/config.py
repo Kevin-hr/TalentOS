@@ -65,7 +65,7 @@ class StorageConfig:
 class AppConfig:
     """Main application configuration."""
     app_name: str = "TalentOS"
-    version: str = "1.3.0"
+    version: str = "3.0.0"
     debug: bool = False
     log_level: str = "INFO"
 
@@ -115,7 +115,7 @@ class ConfigManager:
 
     DEFAULT_CONFIG = {
         "app_name": "TalentOS",
-        "version": "1.3.0",
+        "version": "3.0.0",
         "debug": False,
         "log_level": "INFO",
         "llm_providers": {
