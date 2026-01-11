@@ -7,14 +7,16 @@ Plugin implementations for various LLM services.
 from .deepseek import DeepSeekProvider
 from .openai import OpenAIProvider
 from .anthropic import AnthropicProvider
+from .local_embedding import LocalEmbeddingProvider
 
-__all__ = ['DeepSeekProvider', 'OpenAIProvider', 'AnthropicProvider']
+__all__ = ['DeepSeekProvider', 'OpenAIProvider', 'AnthropicProvider', 'LocalEmbeddingProvider']
 
 # Provider registry for dynamic loading
 PROVIDER_REGISTRY = {
     'deepseek': DeepSeekProvider,
     'openai': OpenAIProvider,
     'anthropic': AnthropicProvider,
+    'local_embedding': LocalEmbeddingProvider,
 }
 
 

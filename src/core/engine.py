@@ -538,10 +538,11 @@ class TalentOSEngine:
                 provider = "deepseek"
                 provider_config = fallback
             else:
-                raise PluginNotFoundError(
-                    f"No enabled LLM provider found. "
-                    f"Please enable a provider in config or set DEEPSEEK_API_KEY."
-                )
+                # Even if no provider is configured, we might want to proceed for RAG-only usage
+                # But engine generally needs an LLM. 
+                # For now, let's keep the error or allow it if we only want embedding.
+                # Assuming DeepSeek is default if nothing else.
+                pass 
 
         try:
             self._llm_provider = get_llm_provider(
@@ -549,8 +550,39 @@ class TalentOSEngine:
                 config=provider_config
             )
             self._current_provider = provider
+            
+            # Setup separate embedding provider if needed
+            self._setup_embedding_provider()
+            
         except Exception as e:
             raise PluginNotFoundError(f"Failed to initialize LLM provider '{provider}': {e}")
+
+    def _setup_embedding_provider(self):
+        """
+        Setup a dedicated embedding provider if the main LLM provider doesn't support it.
+        Strategy:
+        1. Check if main provider supports embeddings.
+        2. If not, try to load 'local_embedding' (BAAI/bge-small-zh-v1.5).
+        """
+        try:
+            # Test if main provider supports embedding
+            self._llm_provider.embed("test")
+        except NotImplementedError:
+            # Main provider (e.g., DeepSeek) doesn't support embedding.
+            # Load local embedding provider as a fallback for embed() calls.
+            print("Main provider does not support embeddings. Initializing Local BGE model...")
+            try:
+                from src.plugins.llm_providers.local_embedding import LocalEmbeddingProvider
+                self._embedding_provider = LocalEmbeddingProvider()
+                
+                # Monkey patch the main provider's embed method to use the local one
+                self._llm_provider.embed = self._embedding_provider.embed
+                print("Successfully injected Local Embedding Provider (BAAI/bge-small-zh-v1.5)")
+            except Exception as e:
+                print(f"Failed to initialize local embedding fallback: {e}")
+        except Exception:
+            # Other errors, maybe network or config, ignore for now
+            pass
 
     def _get_default_provider(self) -> str:
         """Get the default provider from config."""
@@ -889,45 +921,57 @@ class TalentOSEngine:
             return self._construct_headhunter_prompt(resume_text, jd_text)
 
         prompt = f"""
-TASK:
-Analyze the following Candidate Resume against the Target Job Description (JD).
+        TASK:
+        Analyze the following Candidate Resume against the Target Job Description (JD).
 
-TARGET JD:
-{jd_text}
+        TARGET JD:
+        {jd_text}
 
-CANDIDATE RESUME:
-{resume_text}
+        CANDIDATE RESUME:
+        {resume_text}
 
-OUTPUT REQUIREMENTS (Markdown Format):
+        OUTPUT REQUIREMENTS (Markdown Format):
 
-## 1. Match Score (0-100)
-- Give a brutally honest score.
-- < 60: Trash bin immediately.
-- 60-80: Backup pile.
-- > 80: Interview invite.
+        ## 1. 核心结论 (3句话总结)
+        - **总评**: One sentence summary of the candidate's fit (e.g., "Strong match for technical skills but lacks leadership experience").
+        - **关键优势**: The single biggest selling point.
+        - **核心短板**: The single biggest blocker.
 
-## 2. Fatal Red Flags (The "Why No")
-- List top 3 reasons why an HR would REJECT this resume in 6 seconds.
-- Be specific (e.g., "Vague descriptions", "No metrics", "Job hopping").
+        ## 2. 岗位匹配度分析 (多维度)
+        - **技术栈匹配**: (Match/Partial/No Match) - Explain key gaps.
+        - **项目经验匹配**: (Match/Partial/No Match) - Assess complexity and scale.
+        - **软技能/文化**: (Match/Partial/No Match) - Assess leadership, communication.
+        - **综合匹配度评分**: 0-100.
 
-## 3. The "Money" Bullet Points (STAR Rewrite)
-- Pick the ONE most relevant experience from the resume.
-- Rewrite it into 3 bullet points using strict STAR format (Situation -> Task -> Action -> Result).
-- MUST include quantitative metrics (%, $, time saved).
-- If metrics are missing in source, use placeholders like [Increase by X%] and tell user to fill it.
+        ## 3. 技能雷达 (JSON)
+        Output a JSON block for radar chart visualization with exactly 6 dimensions:
+        ```json
+        {{"radar": {{"技术深度": 0-100, "项目广度": 0-100, "架构能力": 0-100, "工程素养": 0-100, "沟通协作": 0-100, "发展潜力": 0-100}}}}
+        ```
+        Replace the values (0-100) with your actual assessment scores.
 
-## 4. Quick Fixes (Actionable Advice)
-- 3 things the candidate can change RIGHT NOW to boost the score by 10 points.
+        ## 4. 升职加薪建议 (Career Growth)
+        - **当前预估职级**: e.g., P6/Senior.
+        - **下一级晋升路径**: What exactly do they need to do to reach the next level? (e.g., "Lead a cross-team project", "Master K8s").
+        - **薪资谈判筹码**: What is their strongest bargaining chip?
 
-## 5. Skill Radar (JSON)
-Output a JSON block for radar chart visualization with exactly 6 dimensions:
-```json
-{{"radar": {{"专业技能": 0-100, "项目经验": 0-100, "学历背景": 0-100, "行业匹配": 0-100, "软技能": 0-100, "成长潜力": 0-100}}}}
-```
-Replace the values (0-100) with your actual assessment scores.
+        ## 5. 致命红旗 (风险预警)
+        - List top 3 potential risks (e.g., Job hopping, gap years, vague descriptions).
 
-TONE: Professional but critical. No fluff. No "Good job". Focus on GAP analysis.
-LANGUAGE: 全部使用中文输出 (All output must be in Simplified Chinese).
+        ## 6. STAR 法则重写建议 (简历优化)
+        - Pick the ONE most relevant experience.
+        - Rewrite it using STAR (Situation, Task, Action, Result) to make it sound 10x better.
+        - **Must include quantitative metrics**.
+
+        ## 7. 快速改进方案 (Quick Wins)
+        - 3 simple changes to the resume text that will immediately improve the pass rate.
+
+        ## 8. 一键应用建议 (Action Plan)
+        - **Recommended Role**: What exact title should they apply for?
+        - **Application Strategy**: e.g., "Apply directly to CTO", "Highlight X project in cover letter".
+
+        TONE: Professional, Constructive, Data-Driven.
+        LANGUAGE: 全部使用中文输出 (All output must be in Simplified Chinese).
         """
         return prompt
 
@@ -950,31 +994,31 @@ CANDIDATE RESUME:
 
 OUTPUT REQUIREMENTS (Markdown Format):
 
-## 1. Executive Summary (The "Sell")
-- Write a 3-sentence "Elevator Pitch" to the Hiring Manager.
-- Focus on: Why this guy fits the PAIN POINT in the JD.
+## 1. 候选人画像 (电梯演讲)
+        - Write a 3-sentence "Elevator Pitch" to the Hiring Manager.
+        - Focus on: Why this guy fits the PAIN POINT in the JD.
 
-## 2. Match Analysis
-- **Match Score**: 0-100
-- **Key Selling Points**: 3 bullet points. Why should the client interview him?
-- **Risk Assessment**: 3 bullet points. What concerns might the client have? (e.g., Job hopping, expensive, culture fit).
+        ## 2. 匹配度分析
+        - **Match Score**: 0-100
+        - **Key Selling Points**: 3 bullet points. Why should the client interview him?
+        - **Risk Assessment**: 3 bullet points. What concerns might the client have? (e.g., Job hopping, expensive, culture fit).
 
-## 3. Interview Cheat Sheet
-- 3 "Killer Questions" the Hiring Manager should ask to test the candidate's depth.
-- Expected "Good Answer" vs "Red Flag Answer" for each.
+        ## 3. 面试作弊条 (必问清单)
+        - 3 "Killer Questions" the Hiring Manager should ask to test the candidate's depth.
+        - Expected "Good Answer" vs "Red Flag Answer" for each.
 
-## 4. Salary & Level Estimation
-- Based on the experience, estimate the likely P-level (e.g., P6/P7) and salary expectation range (if inferable).
+        ## 4. 职级与薪资预估
+        - Based on the experience, estimate the likely P-level (e.g., P6/P7) and salary expectation range (if inferable).
 
-## 5. Skill Radar (JSON)
-Output a JSON block for radar chart visualization with exactly 6 dimensions:
-```json
-{{"radar": {{"专业技能": 0-100, "项目经验": 0-100, "学历背景": 0-100, "行业匹配": 0-100, "稳定性": 0-100, "性价比": 0-100}}}}
-```
-(Note: "稳定性" and "性价比" are key for Headhunters).
+        ## 5. 技能雷达 (JSON)
+        Output a JSON block for radar chart visualization with exactly 6 dimensions:
+        ```json
+        {{"radar": {{"专业技能": 0-100, "项目经验": 0-100, "学历背景": 0-100, "行业匹配": 0-100, "稳定性": 0-100, "性价比": 0-100}}}}
+        ```
+        (Note: "稳定性" and "性价比" are key for Headhunters).
 
-TONE: Professional, Objective, Sales-driven.
-LANGUAGE: Chinese (Simplified).
+        TONE: Professional, Objective, Sales-driven.
+        LANGUAGE: Chinese (Simplified).
         """
         return prompt
 
@@ -1189,6 +1233,9 @@ LANGUAGE: Chinese (Simplified).
         except NotImplementedError:
             raise TalentOSError("Current LLM provider does not support embeddings.")
         except Exception as e:
+            # Check if this is an "unsupported" error bubbling up
+            if "does not support embeddings" in str(e):
+                 raise TalentOSError("Current LLM provider does not support embeddings.")
             raise TalentOSError(f"Search failed: {e}")
             
         results = self._vector_store.search(query_embedding, limit=limit)

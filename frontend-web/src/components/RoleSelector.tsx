@@ -22,7 +22,8 @@ export function RoleSelector({ onSelectCandidate, onSelectHR }: RoleSelectorProp
         }}
       />
       
-      {/* System Status Bar */}
+      {/* System Status Bar - HIDDEN */}
+      {/* 
       <div className="absolute top-0 left-0 w-full p-4 flex justify-between items-center text-[10px] md:text-xs text-gray-500 font-mono tracking-widest uppercase z-10 opacity-50">
         <div className="flex gap-4">
           <span>TalentOS Kernel v3.0.0</span>
@@ -32,6 +33,7 @@ export function RoleSelector({ onSelectCandidate, onSelectHR }: RoleSelectorProp
           <span>Secure Connection :: Encrypted</span>
         </div>
       </div>
+      */}
 
       <div className="max-w-6xl w-full z-10 relative">
         <motion.div 
@@ -40,42 +42,53 @@ export function RoleSelector({ onSelectCandidate, onSelectHR }: RoleSelectorProp
           transition={{ duration: 0.8 }}
           className="text-center mb-16 space-y-4"
         >
+          {/* OS Badge - HIDDEN */}
+          {/*
           <div className="inline-block mb-2 px-3 py-1 border border-gray-700 rounded-full bg-gray-900/50 backdrop-blur-sm">
             <span className="text-xs font-mono text-gray-400 tracking-[0.2em] uppercase">Operating System Loaded</span>
           </div>
-          <h1 className="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-gray-200 to-gray-500 tracking-tighter">
-            TalentOS
+          */}
+          <h1 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-gray-200 to-gray-500 tracking-tighter">
+            找工作，直接跟 AI 谈
           </h1>
           <p className="text-xl md:text-2xl text-gray-400 font-light tracking-wide max-w-2xl mx-auto border-t border-gray-800 pt-6 mt-6">
-            招聘行业的底层操作系统 · <span className="text-gray-500">The Career Operating System</span>
+            不玩虚的，只谈 <span className="text-white font-bold">钱</span> 和 <span className="text-white font-bold">Offer</span>
           </p>
+          {/* Slogan - HIDDEN */}
+          {/*
+          <p className="text-sm text-gray-500 font-mono tracking-widest uppercase">
+            TALK TO AI. GET HIRED.
+          </p>
+          */}
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
           {/* Candidate Card */}
           <RoleCard
             icon={<User className="w-12 h-12 text-[#34D399]" />}
-            title="我是求职者"
-            subtitle="THE CAREER HACKER"
-            description="别再盲目海投了。升级你的 TalentOS，用 AI 逆向工程 6 秒筛选法则，让你的简历成为系统无法忽视的信号。"
-            features={['黑盒逆向诊断', 'ATS 穿透力分析', '降维打击话术']}
+            title="我要找工作"
+            subtitle="Before: 10k/月 → After: 20k/月"
+            description="30秒，把你的简历变成 HR 眼里的“必面”名单。不玩虚的，直接涨薪。"
+            features={['简历一键精修', '薪资底牌分析', '面试押题神器']}
             onClick={onSelectCandidate}
             accentColor="border-[#34D399]/20 hover:border-[#34D399]"
             buttonColor="bg-[#34D399] hover:bg-[#10B981] text-[#061018]"
             delay={0.2}
+            cta="立即开挂"
           />
 
           {/* HR Card */}
           <RoleCard
             icon={<Briefcase className="w-12 h-12 text-[#3B82F6]" />}
-            title="我是招聘方"
-            subtitle="THE TALENT RADAR"
-            description="别再“读”简历了。接入 TalentOS 招聘智脑，开启上帝视角，瞬间透视候选人底牌，只锁定 1% 的真相。"
-            features={['候选人底牌透视', '上帝视角匹配', '光速批量收割']}
+            title="我要招牛人"
+            subtitle="Before: 加班筛人 → After: 准时下班"
+            description="别看了，让 AI 替你筛。只聊那 1% 的对的人，把时间留给真正重要的事。"
+            features={['人才雷达透视', '人岗精准匹配', '风险自动预警']}
             onClick={onSelectHR}
             accentColor="border-[#3B82F6]/20 hover:border-[#3B82F6]"
             buttonColor="bg-[#3B82F6] hover:bg-[#2563EB] text-white"
             delay={0.4}
+            cta="立即招人"
           />
         </div>
       </div>
@@ -92,7 +105,8 @@ function RoleCard({
   onClick,
   accentColor,
   buttonColor,
-  delay
+  delay,
+  cta
 }: { 
   icon: React.ReactNode
   title: string
@@ -103,6 +117,7 @@ function RoleCard({
   accentColor: string
   buttonColor: string
   delay: number
+  cta?: string
 }) {
   return (
     <motion.div 
@@ -115,7 +130,7 @@ function RoleCard({
     >
       <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
         <div className="text-6xl font-black font-mono tracking-tighter text-white">
-           {title === "我是求职者" ? "C-SIDE" : "B-SIDE"}
+           {title.includes("求职者") ? "C-SIDE" : "B-SIDE"}
         </div>
       </div>
 
@@ -136,8 +151,8 @@ function RoleCard({
         <div className="space-y-3 pt-6 border-t border-gray-800/50">
           {features.map((feature, i) => (
             <div key={i} className="flex items-center text-gray-300 group/item">
-              <span className={`w-1.5 h-1.5 rounded-full mr-3 ${title === "我是求职者" ? "bg-[#34D399]" : "bg-[#3B82F6]"} group-hover/item:animate-pulse`} />
-              <span className="text-sm font-medium">{feature}</span>
+              <span className={`w-1.5 h-1.5 rounded-full mr-3 ${title.includes("求职者") ? "bg-[#34D399]" : "bg-[#3B82F6]"} group-hover/item:animate-pulse`} />
+              <span className="text-base font-medium">{feature}</span>
             </div>
           ))}
         </div>
@@ -145,7 +160,7 @@ function RoleCard({
         <button 
           className={`w-full py-4 rounded-lg font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-all mt-8 shadow-lg ${buttonColor}`}
         >
-          Initialize System <ChevronRight className="w-4 h-4" />
+          {cta || 'Initialize System'} <ChevronRight className="w-4 h-4" />
         </button>
       </div>
     </motion.div>
