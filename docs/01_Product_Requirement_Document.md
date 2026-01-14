@@ -1,23 +1,26 @@
-#  Product Requirement Document (PRD): TalentOS
+# Product Requirement Document (PRD): TalentOS
 
-> **Version**: 2.0 (Rebranded)
+> **Version**: 3.0 (Pure C-Side)
 > **Status**: Development
-> **Owner**: Digital Life Kha'Zix
-> **Type**: Automation Asset (SaaS)
+> **Owner**: TalentOS Team
+> **Type**: Consumer SaaS
 
 ## 1. Product Overview (产品概览)
 
 ### 1.1 Vision (愿景)
-To become the standard "Career Operating System" for job seekers and recruiters, providing a professional, automated, and unbiased HRBP-grade resume audit and matching system.
+To empower job seekers with an "Exoskeleton" (外骨骼) to hack the recruitment process, using AI to decode, optimize, and match their career path.
 
 ### 1.2 Core Value Proposition (核心价值)
-*   **For Users (Career Hacker)**: Pass ATS filters and survive the "6-second HR scan".
-*   **For HR (Talent Radar)**: A fully automated, high-margin asset with zero marginal cost of replication.
+*   **For Users (Career Hacker)**:
+    *   **Decode**: Understand *why* you are rejected.
+    *   **Upgrade**: Transform "experience" into "value".
+    *   **Match**: Find where you belong and how much you are worth.
+    *   **Train**: Fail here, so you win there.
 
-### 1.3 Success Metrics (KPIs) - MVP
-*   **Conversion Rate**: Visitor to Upload > 15%.
-*   **Paid Conversion**: Free Report to Full Unlock > 5%.
-*   **NPS**: User Satisfaction Score > 8/10.
+### 1.3 Success Metrics (KPIs)
+*   **Conversion Rate**: Visitor to Diagnosis > 20%.
+*   **Paid Conversion**: Diagnosis to VIP Upgrade > 3%.
+*   **Retention**: Weekly Active Users (WAU) driven by "Training" and "Job Matching".
 
 ---
 
@@ -25,49 +28,51 @@ To become the standard "Career Operating System" for job seekers and recruiters,
 
 | ID | Persona | Trigger | Action | Expected Outcome |
 | :--- | :--- | :--- | :--- | :--- |
-| US-01 | **Desperate Job Seeker** | Receiving 0 interviews | Uploads Resume + JD | Receives a "Brutal Truth" score and realizes *why* they failed. |
-| US-02 | **Career Switcher** | Unsure of transferable skills | Requests STAR Rewrite | Sees their past experience reframed into target role language. |
-| US-03 | **Product Owner** | System runs automatically | Checks Dashboard | Sees revenue generated while sleeping. |
+| US-01 | **Desperate Job Seeker** | Receiving 0 interviews | Uploads Resume + Target JD | Receives a "Brutal Truth" score and critical "Red Flags". |
+| US-02 | **Career Switcher** | Unsure of transferable skills | Uses **Rewrite** function | Sees their past experience reframed into target role language (STAR format). |
+| US-03 | **Anxious Interviewee** | Fear of unknown questions | Uses **Training** mode | Practices with AI Interviewer, gets real-time feedback and scores. |
+| US-04 | **Passive Candidate** | Curious about market value | Uses **Match** function | Sees "Salary Estimation" and "Gap Analysis" for dream roles. |
 
 ---
 
 ## 3. Functional Specifications (功能规格)
 
-### 3.1 Core Workflow (The Engine)
-1.  **Input Ingestion**: Parse PDF/Text Resume and JD Text.
-2.  **Gap Analysis**: Compare Resume entities vs. JD requirements (Semantic Matching).
-3.  **Prompt Engineering**: Inject "Senior HRBP" Persona context.
-4.  **Report Generation**: Render Markdown report with quantitative scoring.
+### 3.1 Core Workflow (The Loop)
+1.  **Diagnosis (诊断)**:
+    *   Input: Resume (PDF/Text) + JD.
+    *   Output: Score (0-100), Red Flags, Radar Chart (Hard/Soft Skills).
+2.  **Rewrite (改写)**:
+    *   Action: One-click optimize specific bullet points.
+    *   Logic: Convert "Task-based" to "Result-based" (STAR method).
+3.  **Match (配岗)**:
+    *   Input: User Profile / Preferences.
+    *   Output: Matched Roles list with "Match Score" and "Impact Prediction".
+4.  **Train (训练)**:
+    *   Mode: Chat-based Interview Simulation.
+    *   Feedback: Tone analysis, content coverage, logical structure.
 
-### 3.2 Data Models (Type Definitions)
-*Adhering to "Abstract First" principle.*
+### 3.2 Data Models (Simplified)
 
 ```typescript
-// Core Analysis Request
-interface AnalysisRequest {
-  resumeContent: string;
-  jobDescription: string;
-  mode: 'STRICT_HR' | 'CAREER_COACH';
+// The Analysis Result
+interface AnalysisResult {
+  report: string; // Markdown formatted
+  score: number;
+  radar: {
+    dimensions: Array<{ name: string; value: number }>;
+  };
+  actionableSteps: string[];
 }
 
-// The Generated Report Structure
-interface SniperReport {
-  meta: {
-    timestamp: number;
-    modelUsed: string; // e.g., "DeepSeek-V3"
-  };
-  scores: {
-    total: number; // 0-100
-    keywordMatch: number; // ATS Impact
-    impactScore: number; // STAR Quality
-  };
-  redFlags: string[]; // Critical issues to fix immediately
-  starRewrites: {
-    originalText: string;
-    improvedText: string; // STAR format with metrics
-    reasoning: string;
-  }[];
-  actionPlan: string[]; // Top 3 quick wins
+// The VIP Plan
+interface VipPlan {
+  id: 'pro_monthly' | 'pro_quarterly';
+  features: [
+    'Unlimited Rewrites',
+    'Deep Match Report',
+    'AI Interview Trainer',
+    'Salary Analysis'
+  ];
 }
 ```
 
@@ -75,63 +80,40 @@ interface SniperReport {
 
 ## 4. Technical Architecture (技术架构)
 
-### 4.1 Directory Structure
-*Standardized project layout for easy replication.*
+### 4.1 Tech Stack
+*   **Frontend**: React 18 + Vite + TailwindCSS (Mobile First).
+*   **Backend**: Python FastAPI (Stateless API).
+*   **AI Engine**: DeepSeek-V3 (Reasoning Mode) for complex analysis.
+*   **Parsing**: MarkItDown / Docling for high-fidelity resume parsing.
 
-```text
-TalentOS/
-├── docs/
-│   └── 01_Product_Requirement_Document.md   # This file
-├── src/
-│   ├── talentos.py                     # Core Logic (The Kernel)
-│   └── web_ui.py                            # Streamlit Interface (The Shell)
-├── data/
-│   ├── sample_resume_A.md                   # Test Input
-│   ├── sample_jd_A.md                       # Test Input
-│   └── sample_report_A.md                   # Golden Output
-└── tests/
-    └── integration_test.py                  # Verification Script
-```
-
-### 4.2 Tech Stack
-*   **Frontend**: Streamlit (MVP) -> Next.js (V2)
-*   **Backend**: Python (FastAPI/Streamlit runtime)
-*   **AI Engine**: DeepSeek-V3 (via OpenAI-compatible API)
-    *   *Base URL*: `https://api.deepseek.com`
-    *   *Model*: `deepseek-chat`
-    *   *Temperature*: 0.7 (Balanced creativity/precision)
-*   **Infrastructure**: Localhost -> Streamlit Cloud / Vercel
-
-### 4.3 Security & Privacy
-*   **Data Retention**: No storage of user resumes in MVP (Stateless).
-*   **API Security**: Environment variable management for API Keys.
+### 4.2 Security & Privacy
+*   **Data Minimization**: No permanent storage of resume text in MVP (Stateless processing).
+*   **Local Processing**: Ready for Local LLM integration (Roadmap).
 
 ---
 
 ## 5. Go-to-Market Strategy (GTM)
 
-### 5.1 Pricing Strategy (3-Tier Ladder)
-*   **Tier 1: Free Audit (Hook)**
-    *   *Deliverable*: Overall Score + 1 Red Flag.
-    *   *Goal*: Establish authority and create "Gap".
-*   **Tier 2: Core Unlock (¥9.9)**
-    *   *Deliverable*: Full Report (All Red Flags + Quick Fixes).
-    *   *Goal*: Low-friction monetization.
-*   **Tier 3: Premium Rewrite (¥19.9)**
-    *   *Deliverable*: Everything in Tier 2 + **STAR Rewrites** + Interview Prediction.
-    *   *Goal*: High-value asset delivery.
+### 5.1 Pricing Strategy (The Funnel)
+*   **Free**:
+    *   1 Diagnosis / Day.
+    *   Limited Rewrite (1 bullet point).
+    *   Basic Match List.
+*   **VIP ($9.9 - $29/mo)**:
+    *   Unlimited Diagnosis & Rewrites.
+    *   Full Interview Training.
+    *   Advanced Salary & Gap Analysis.
 
-### 5.2 Content Strategy (Traffic)
-*   **Channel**: Video Number / Bilibili.
-*   **Content Type**: "Resume Rescue" Series (Short_Dopamine).
-*   **Hook**: "I fixed this 30k resume in 10 seconds using AI."
+### 5.2 Content Strategy
+*   **Hook**: "Stop guessing. See your resume through an HR's eyes."
+*   **Channels**: Social Media (Career advice), SEO (Resume Checker, AI Resume Builder).
 
 ---
 
 ## 6. Action Plan (执行计划)
 
-- [x] **Kernel**: Develop `talentos.py` (Completed).
-- [x] **Interface**: Build `app.py` Web UI (Completed).
-- [ ] **Deployment**: Deploy to public URL.
-- [ ] **Payment**: Integrate payment gateway (WeChat/Alipay or Virtual Credits).
-
+- [x] **Kernel**: Develop `engine.py` (Completed).
+- [x] **Web UI**: Build Candidate Web with React (Completed).
+- [x] **Features**: Implement Diagnosis, Rewrite, Match, Train (Alpha).
+- [ ] **Growth**: SEO Optimization & Deep Linking (In Progress).
+- [ ] **Monetization**: Integrate Payment Gateway (Stripe/WeChat).
