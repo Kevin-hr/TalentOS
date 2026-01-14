@@ -1,5 +1,5 @@
-import * as React from "react"
-import { cn } from "@/lib/utils"
+import * as React from "react";
+import { cn } from "@/lib/utils";
 
 const Card = React.forwardRef<
   HTMLDivElement,
@@ -9,11 +9,11 @@ const Card = React.forwardRef<
     ref={ref}
     className={cn(
       "rounded-3xl border border-white/50 bg-white/80 backdrop-blur-xl text-card-foreground shadow-sm",
-      className
+      className,
     )}
     {...props}
   />
-))
-Card.displayName = "Card"
+));
+Card.displayName = "Card";
 
-export { Card }
+export { Card };

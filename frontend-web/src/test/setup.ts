@@ -1,24 +1,24 @@
-import '@testing-library/jest-dom'
+import "@testing-library/jest-dom";
 
 if (
-  typeof globalThis.localStorage === 'undefined' ||
-  typeof (globalThis.localStorage as Storage).getItem !== 'function'
+  typeof globalThis.localStorage === "undefined" ||
+  typeof (globalThis.localStorage as Storage).getItem !== "function"
 ) {
-  const store = new Map<string, string>()
+  const store = new Map<string, string>();
 
-  Object.defineProperty(globalThis, 'localStorage', {
+  Object.defineProperty(globalThis, "localStorage", {
     value: {
       getItem: (key: string) => store.get(key) ?? null,
       setItem: (key: string, value: string) => {
-        store.set(key, value)
+        store.set(key, value);
       },
       removeItem: (key: string) => {
-        store.delete(key)
+        store.delete(key);
       },
       clear: () => {
-        store.clear()
-      }
+        store.clear();
+      },
     },
-    configurable: true
-  })
+    configurable: true,
+  });
 }

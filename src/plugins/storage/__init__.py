@@ -6,13 +6,15 @@ Plugin implementations for caching and persistence.
 
 from .local_storage import LocalStorage
 from .memory_cache import MemoryCache
+from .supabase_storage import SupabaseStorage
 
-__all__ = ['LocalStorage', 'MemoryCache']
+__all__ = ['LocalStorage', 'MemoryCache', 'SupabaseStorage']
 
 # Storage registry for dynamic loading
 STORAGE_REGISTRY = {
     'local': LocalStorage,
     'memory': MemoryCache,
+    'supabase': SupabaseStorage,
 }
 
 

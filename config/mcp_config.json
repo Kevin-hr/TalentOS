@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp?project_ref=YOUR_PROJECT_ID&read_only=true",
+      "description": "Connects to your Supabase project for database management and querying."
+    }
+  },
+  "instructions": "To use this config with Claude Desktop, copy the content above into your %APPDATA%/Claude/claude_desktop_config.json file. For Trae, this is for reference only as Trae manages MCP connections via its own UI."
+}
