@@ -11,11 +11,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@posthog/react": "^1.7.0",
     "@radix-ui/react-dialog": "^1.1.15",
     "axios": "^1.13.2",
     "clsx": "^2.1.1",
     "framer-motion": "^12.24.12",
     "lucide-react": "^0.562.0",
+    "posthog-js": "^1.333.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-markdown": "^10.1.0",
