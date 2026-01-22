@@ -1,13 +1,7 @@
 import { motion } from "framer-motion";
-import { CheckCircle, Zap, FileText, ArrowRight, Bot } from "lucide-react";
+import { CheckCircle, Zap, FileText, ArrowRight } from "lucide-react";
 
 export const LinearPreview = () => {
-  const scrollToSection = (id: string) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
   const goToApp = (path: string) => {
     window.location.assign(path);
   };
@@ -16,38 +10,7 @@ export const LinearPreview = () => {
     <div className="min-h-screen bg-[#000000] text-white font-sans overflow-hidden selection:bg-purple-500/30">
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 border-b border-white/10 bg-black/50 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-gradient-to-br from-emerald-400 to-blue-500 rounded-full flex items-center justify-center">
-              <Bot size={14} className="text-black" />
-            </div>
-            <span className="font-semibold tracking-tight">
-              Career Hacker
-            </span>
-          </div>
-          <div className="hidden md:flex items-center gap-6 text-sm text-gray-400">
-            <button
-              type="button"
-              className="hover:text-white transition-colors cursor-pointer"
-              onClick={() => scrollToSection("features")}
-            >
-              核心功能
-            </button>
-            <button
-              type="button"
-              className="hover:text-white transition-colors cursor-pointer"
-              onClick={() => scrollToSection("method")}
-            >
-              方法论
-            </button>
-            <button
-              type="button"
-              className="hover:text-white transition-colors cursor-pointer"
-              onClick={() => scrollToSection("pricing")}
-            >
-              定价
-            </button>
-          </div>
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-end">
           <button
             type="button"
             className="bg-white/10 hover:bg-white/20 text-white px-4 py-1.5 rounded-full text-sm font-medium transition-all border border-white/5"
