@@ -50,7 +50,7 @@
 我们已经完成了从“单点工具”到“智能求职助手”的闭环构建：
 
 ### 🧠 核心引擎 (Core Engine)
-*   **全格式解析**: 强力解析 PDF, DOCX, TXT, MD 等多种格式的简历与 JD（基于 `MarkItDown` & `Docling`）。
+*   **全格式解析**: 强力解析 PDF, DOCX, TXT, MD 等多种格式的简历与 JD（基于 `pdfplumber` & `python-docx`）。
 *   **结构化提取**: 利用 LLM 将非结构化简历转化为标准 JSON（个人信息、教育、经历、技能）。
 *   **智能诊断**: 模拟资深 HR 视角，提供 6 秒简历速览评分、致命伤预警及 STAR 法则重写建议。
 
@@ -129,4 +129,4 @@ pnpm dev
 *   **Backend**: Python 3.9+, FastAPI, Pydantic
 *   **Frontend**: React 18, TypeScript, TailwindCSS, Lucide Icons
 *   **AI Engine**: DeepSeek-V3 (Reasoning Mode), OpenAI
-*   **Parsing**: Docling, MarkItDown, pdfplumber
+*   **Parsing**: pdfplumber, python-docx, MarkItDown (Planned)

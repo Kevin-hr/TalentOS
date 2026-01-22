@@ -6,10 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```powershell
 # Install dependencies / 安装依赖
-pip install streamlit openai python-dotenv pdfplumber python-docx pyyaml httpx fastapi uvicorn
-
-# Run Public Access (Web + API + Tunnel) / 启动公网访问 (推荐)
-.\run_public_access.bat
+pip install openai python-dotenv pdfplumber python-docx pyyaml httpx fastapi uvicorn pytest
 
 # Configure Cloudflare Tunnel / 配置隧道
 .\setup_tunnel.ps1
@@ -53,9 +50,9 @@ frontend-web/             # React Frontend (Port 8501)
 ## Usage / 使用
 
 ```python
-from src.core.engine import create_engine
+from src.core.engine import TalentOSEngine
 
-engine = create_engine()
+engine = TalentOSEngine()
 
 # Resume vs JD analysis (returns AnalysisResult)
 result = engine.analyze(resume_text, jd_text, persona="hrbp")
@@ -64,8 +61,8 @@ result = engine.analyze(resume_text, jd_text, persona="hrbp")
 # Deep diagnostic (no JD, identifies hidden value)
 result = engine.diagnose_resume(resume_text, persona="hrbp")
 
-# Batch processing
-results = engine.batch_analyze(resumes_list, jd_text, show_progress=True)
+# Match evaluation (returns dict)
+match_result = engine.evaluate_match(resume_text, jd_text, weights={"skills": 40})
 
 # Document parsing
 doc = engine.parse_document("resume.pdf")  # ParsedDocument
@@ -76,8 +73,8 @@ engine.set_llm_provider("openai")
 
 ### Personas / 人设
 - `hrbp` - Senior HRBP (strict, results-oriented, default)
-- `coach` - Career Coach (friendly, supportive)
-- `product_manager` - Senior PM (strategic, data-driven)
+- `candidate` - Career Coach (friendly, supportive)
+- `B-Side Headhunter` - Agency Recruiter (sales-driven)
 
 ---
 
@@ -109,17 +106,6 @@ DEEPSEEK_API_KEY="sk-..."
 
 ---
 
-## Legacy API / 旧版API
-
-Integration tests use legacy API for backward compatibility:
-```python
-from talentos import TalentOS
-sniper = TalentOS()
-report = sniper.analyze(resume, jd)
-```
-
----
-
 ## Troubleshooting / 故障排查
 
 ### "引擎未初始化" 错误
@@ -139,9 +125,9 @@ Install `httpx`: `pip install httpx` - enables proxy support in `deepseek.py`
    - **Cause**: Cloudflare account missing `bmwuv.com` or local cert outdated.
    - **Fix**: Add domain to Dashboard -> Change Nameservers (Aliyun) -> `cloudflared tunnel login`.
 
-2. **Streamlit 404 / Connection Error**:
-   - **Cause**: CORS/XSRF protection blocking Tunnel requests.
-   - **Fix**: Run with `--server.enableCORS false --server.enableXsrfProtection false` (Included in `run_public_access.bat`).
+2. **Frontend Connection Issues**:
+   - **Cause**: CORS blocking API requests.
+   - **Fix**: Check `vite.config.ts` proxy settings and `api_server.py` CORS middleware.
 
 3. **Tunnel ID Mismatch**:
    - **Cause**: `setup_tunnel.ps1` using old tunnel ID.
