@@ -8,10 +8,7 @@ import {
   Upload,
   Target,
   Zap,
-  Sparkles,
   Briefcase,
-  MapPin,
-  DollarSign,
   ArrowRight,
 } from "lucide-react";
 import LinearPreview from "@/components/LinearPreview";
@@ -22,8 +19,9 @@ import { SkillRadar } from "@/components/SkillRadar";
 import { SalaryAnalysis } from "@/components/SalaryAnalysis";
 import { UpgradeModal } from "@/components/UpgradeModal";
 import { InterviewModal } from "@/components/InterviewModal";
-import { Zap as ZapIcon, FileEdit, Send } from "lucide-react";
+import { FileEdit, Send, Wand2, Calculator, Swords } from "lucide-react";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
+import { SmartSearch } from "@/components/CandidateSearch";
 
 interface AnalysisResult {
   report: string;
@@ -37,36 +35,7 @@ type MarkdownCodeProps = ComponentPropsWithoutRef<"code"> & {
   inline?: boolean;
 };
 
-// 今日推荐岗位数据
-const RECOMMENDED_JOBS = [
-  {
-    id: 1,
-    company: "字节跳动",
-    title: "高级后端工程师",
-    location: "北京·远程",
-    salary: "35-60K",
-    match: 92,
-    tags: ["Go", "微服务", "Kubernetes"],
-  },
-  {
-    id: 2,
-    company: "阿里云",
-    title: "资深Java架构师",
-    location: "杭州",
-    salary: "40-70K",
-    match: 87,
-    tags: ["Java", "云原生", "高并发"],
-  },
-  {
-    id: 3,
-    company: "腾讯音乐",
-    title: "数据平台工程师",
-    location: "深圳",
-    salary: "30-55K",
-    match: 84,
-    tags: ["Flink", "Spark", "数据湖"],
-  },
-];
+
 
 const DEMO_REPORT = `
 # 简历诊断报告（示例）
@@ -258,14 +227,67 @@ function App() {
     return (
       <div className="min-h-screen bg-[#F3F4EF] text-[#111111] font-sans selection:bg-black/10 pb-28">
         {/* Header: Logo + Slogan (Semantic HTML) */}
-        <header className="relative z-10 px-5 pt-6 flex flex-col items-center text-center space-y-3">
-          <h1 className="text-4xl font-extrabold tracking-tight text-black">TalentOS</h1>
-          <p className="text-sm font-bold text-gray-600 mt-1">DON'T APPLY. DOMINATE.</p>
+        <header className="relative z-10 px-5 pt-8 pb-4 flex flex-col items-center text-center space-y-4">
+          <h1 className="text-5xl font-black tracking-tighter text-black italic">TalentOS</h1>
+
+          <div className="space-y-4 max-w-sm mx-auto">
+            <h2 className="text-2xl font-black leading-tight text-black">
+              找工作是为了什么？
+              <br />
+              <span className="bg-black text-white px-4 py-2 inline-block transform -rotate-1 shadow-[4px_4px_0px_0px_#F54E00] mt-2 text-xl">
+                是为了不再找工作！
+              </span>
+            </h2>
+            <p className="text-sm font-bold text-gray-800 border-b-2 border-black pb-2 inline-block">
+              上 TalentOS，把你的天赋变成终身资产！
+            </p>
+          </div>
+
+          <div className="pt-2">
+            <span className="text-xs font-black bg-[#F54E00] text-white px-3 py-1 rounded-md shadow-[2px_2px_0px_0px_#000] border border-black">
+              想创业的人：命定天赋，降维打击！
+            </span>
+          </div>
+
+          {/* Scrolling Marquee Section */}
+          <div className="w-full overflow-hidden bg-yellow-300 border-y-2 border-black py-2 mt-4">
+            <div className="whitespace-nowrap animate-marquee flex gap-8 items-center">
+              <span className="text-sm font-black uppercase flex items-center gap-2">
+                <Zap className="w-4 h-4" /> 老职场：筹码和时机！主打“每一滴血汗都要换成现金”！
+              </span>
+              <span className="text-sm font-black uppercase flex items-center gap-2">
+                <Zap className="w-4 h-4" /> 老职场：筹码和时机！主打“每一滴血汗都要换成现金”！
+              </span>
+              <span className="text-sm font-black uppercase flex items-center gap-2">
+                <Zap className="w-4 h-4" /> 老职场：筹码和时机！主打“每一滴血汗都要换成现金”！
+              </span>
+            </div>
+          </div>
+
+          <div className="pt-2">
+            <span className="text-xs font-bold text-gray-500 border-2 border-black px-2 py-1 rounded-full bg-white">
+              应届生：避坑和方向！主打“第一步不准踏错”！
+            </span>
+          </div>
         </header>
 
         <main className="relative z-10 px-5 pt-6 space-y-6">
           {activeTab === "analyze" && (
             <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
+              {/* Value Proposition / Cycle */}
+              <div className="grid grid-cols-4 gap-2 mb-2">
+                {[
+                  { icon: <Zap className="w-4 h-4" />, label: "诊断", color: "bg-red-100 text-red-700 border-red-200" },
+                  { icon: <Wand2 className="w-4 h-4" />, label: "改写", color: "bg-blue-100 text-blue-700 border-blue-200" },
+                  { icon: <Calculator className="w-4 h-4" />, label: "估值", color: "bg-green-100 text-green-700 border-green-200" },
+                  { icon: <Swords className="w-4 h-4" />, label: "演练", color: "bg-orange-100 text-orange-700 border-orange-200" },
+                ].map((item, i) => (
+                  <div key={i} className={`flex flex-col items-center justify-center p-2 rounded-lg border-2 ${item.color.replace('bg-', 'border-').replace('text-', 'border-opacity-50 ')} bg-white shadow-sm`}>
+                    <div className={`mb-1 p-1 rounded-full ${item.color}`}>{item.icon}</div>
+                    <span className="text-[10px] font-bold text-gray-600">{item.label}</span>
+                  </div>
+                ))}
+              </div>
               {/* 简历上传 */}
               <section className="bg-white rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6 space-y-4">
                 <div className="flex items-center justify-between">
@@ -307,17 +329,15 @@ function App() {
                     <div className="flex gap-2">
                       <button
                         onClick={() => setJdInputMode("text")}
-                        className={`flex-1 py-2 rounded-md border-2 border-black text-sm font-bold transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[2px] active:shadow-none ${
-                          jdInputMode === "text" ? "bg-[#1D4AFF] text-white" : "bg-white text-black"
-                        }`}
+                        className={`flex-1 py-2 rounded-md border-2 border-black text-sm font-bold transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[2px] active:shadow-none ${jdInputMode === "text" ? "bg-[#1D4AFF] text-white" : "bg-white text-black"
+                          }`}
                       >
                         粘贴JD
                       </button>
                       <button
                         onClick={() => setJdInputMode("file")}
-                        className={`flex-1 py-2 rounded-md border-2 border-black text-sm font-bold transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[2px] active:shadow-none ${
-                          jdInputMode === "file" ? "bg-[#1D4AFF] text-white" : "bg-white text-black"
-                        }`}
+                        className={`flex-1 py-2 rounded-md border-2 border-black text-sm font-bold transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[2px] active:shadow-none ${jdInputMode === "file" ? "bg-[#1D4AFF] text-white" : "bg-white text-black"
+                          }`}
                       >
                         上传文件
                       </button>
@@ -374,53 +394,21 @@ function App() {
           )}
 
           {activeTab === "search" && (
-            <div className="space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-300 pb-20">
-              <div className="flex items-center justify-between">
-                <h2 className="font-bold text-lg flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-[#F54E00]" />
-                  今日推荐
-                </h2>
-              </div>
-              <div className="space-y-3">
-                {RECOMMENDED_JOBS.map((job) => (
-                  <article
-                    key={job.id}
-                    className="bg-white rounded-xl border-2 border-black p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all"
-                  >
-                    <div className="flex items-start justify-between mb-2">
-                      <div>
-                        <h3 className="font-bold text-black text-lg">{job.title}</h3>
-                        <div className="text-sm font-medium text-gray-600">{job.company}</div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-sm font-black text-[#F54E00] bg-[#F54E00]/10 px-2 py-1 rounded-md border border-[#F54E00]">{job.match}% 匹配</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3 text-xs font-mono text-gray-500 mb-3">
-                      <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{job.location}</span>
-                      <span className="flex items-center gap-1"><DollarSign className="w-3 h-3" />{job.salary}</span>
-                    </div>
-                    <div className="flex gap-2">
-                      {job.tags.map((tag) => (
-                        <span key={tag} className="text-xs px-2 py-1 bg-gray-100 border border-gray-300 rounded-md text-gray-700 font-medium">{tag}</span>
-                      ))}
-                    </div>
-                  </article>
-                ))}
-              </div>
+            <div className="pb-20">
+              <SmartSearch />
             </div>
           )}
 
           {activeTab === "profile" && (
-             <div className="flex flex-col items-center justify-center h-64 text-center space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
-                <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center border-2 border-black">
-                   <Briefcase className="w-8 h-8 text-gray-500" />
-                </div>
-                <div>
-                   <h3 className="text-xl font-bold">个人中心</h3>
-                   <p className="text-gray-500 text-sm">开发中...</p>
-                </div>
-             </div>
+            <div className="flex flex-col items-center justify-center h-64 text-center space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
+              <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center border-2 border-black">
+                <Briefcase className="w-8 h-8 text-gray-500" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold">个人中心</h3>
+                <p className="text-gray-500 text-sm">开发中...</p>
+              </div>
+            </div>
           )}
         </main>
 
@@ -463,10 +451,9 @@ function App() {
           <Card className="p-6 bg-black text-white border-none shadow-xl rounded-3xl">
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs font-bold tracking-wider text-gray-400 uppercase">匹配指数</span>
-              <span className={`text-[10px] px-2 py-1 rounded-full font-bold ${
-                (result?.score || 0) >= 80 ? "bg-green-500/30 text-green-400" :
+              <span className={`text-[10px] px-2 py-1 rounded-full font-bold ${(result?.score || 0) >= 80 ? "bg-green-500/30 text-green-400" :
                 (result?.score || 0) >= 60 ? "bg-yellow-500/30 text-yellow-400" : "bg-red-500/30 text-red-400"
-              }`}>
+                }`}>
                 {(result?.score || 0) >= 80 ? "极佳" : (result?.score || 0) >= 60 ? "潜力" : "待提升"}
               </span>
             </div>
@@ -527,16 +514,27 @@ function App() {
             {isStreaming && <span className="inline-block w-2 h-5 bg-black ml-1 animate-pulse" />}
           </div>
 
-          {/* 操作按钮 */}
-          <div className="mt-8 pt-6 border-t border-gray-100 flex flex-wrap gap-3">
-            <Button variant="outline" onClick={() => setInterviewModalOpen(true)} className="rounded-xl border-red-200 bg-red-50 text-red-600 hover:bg-red-100">
-              <ZapIcon className="w-4 h-4 mr-2" /> 练一练
+          {/* 操作按钮 - Hog Style Actions */}
+          <div className="mt-8 pt-6 border-t-2 border-dashed border-gray-200 flex flex-col md:flex-row gap-4">
+            <Button
+              variant="outline"
+              onClick={() => setInterviewModalOpen(true)}
+              className="flex-1 h-12 rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_#000] active:shadow-none active:translate-y-[4px] transition-all bg-[#FF90E8] text-black font-bold hover:bg-[#FF90E8]/90"
+            >
+              <Swords className="w-5 h-5 mr-2" /> 模拟练兵
             </Button>
-            <Button variant="outline" onClick={() => handleProFeature("optimize")} className="rounded-xl border-yellow-200 bg-yellow-50 text-yellow-600 hover:bg-yellow-100">
-              <FileEdit className="w-4 h-4 mr-2" /> 改一改
+            <Button
+              variant="outline"
+              onClick={() => handleProFeature("optimize")}
+              className="flex-1 h-12 rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_#000] active:shadow-none active:translate-y-[4px] transition-all bg-[#23C55E] text-white font-bold hover:bg-[#23C55E]/90 hover:text-white"
+            >
+              <FileEdit className="w-5 h-5 mr-2" /> 简历精修
             </Button>
-            <Button onClick={() => handleProFeature("export")} className="rounded-xl bg-green-500 text-white hover:bg-green-600 ml-auto">
-              <Send className="w-4 h-4 mr-2" /> 投一投
+            <Button
+              onClick={() => setActiveTab("search")}
+              className="flex-1 h-12 rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_#000] active:shadow-none active:translate-y-[4px] transition-all bg-[#F54E00] text-white font-bold hover:bg-[#F54E00]/90"
+            >
+              <Send className="w-5 h-5 mr-2" /> 匹配投递
             </Button>
           </div>
         </Card>

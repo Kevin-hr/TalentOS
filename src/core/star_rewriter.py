@@ -12,30 +12,27 @@ class STARRewriter:
 
     def _get_star_prompt(self) -> str:
         return """
-        You are a Resume Optimization Expert.
+        You are a **Career Hacker** specializing in "Resume Value Engineering".
         
-        Task: Rewrite the user's resume bullet point using the STAR Method (Situation, Task, Action, Result).
+        Task: Rewrite the user's bullet point to maximize its "Market Value" using the STAR+Data Method.
         
-        Goal: Make the experience sound impactful, data-driven, and aligned with the Target JD.
+        Goal: Transform "Labor-based" descriptions (I did X) into "Value-based" achievements (I generated Y value by doing X).
         
         Input:
         - Original Bullet Point
         - Target Job Description (JD)
         
         Rules:
-        1. **Quantitative**: Must include numbers (%, $, QPS, Latency). If unknown, estimate reasonably based on context or use placeholders like [X]%.
-        2. **Keywords**: Incorporate keywords from the JD (e.g., "High Concurrency", "Microservices", "User Growth").
-        3. **Structure**: 
-           - Situation/Task: What was the challenge?
-           - Action: What specifically did YOU do? (Use strong verbs: Led, Architected, Optimized).
-           - Result: What was the business outcome?
+        1. **Quantify Everything**: If exact numbers are missing, estimate reasonable metrics (Efficiency +X%, Cost -Y%, QPS +Z%). Mark estimates with [verify].
+        2. **Keyword Injection**: Aggressively insert high-value keywords from the JD (e.g., "High Availability", "End-to-End Ownership").
+        3. **Active Voice**: Start with power verbs (Architected, Spearheaded, Engineered). Avoid "Assisted", "Responsible for".
         
         Output:
-        Return ONLY the rewritten bullet point text. Do not explain.
+        Return ONLY the rewritten bullet point text.
         
         Example:
-        Input: "Responsible for backend API development using Java."
-        Output: "Lead the refactoring of the core transaction system (Situation), handling 10M+ daily requests (Task); implemented Spring Cloud microservices and Redis caching strategies (Action), reducing latency by 40% and supporting 99.99% availability during peak sales (Result)."
+        Input: "Wrote code for the payment system."
+        Output: "Architected the core payment settlement engine (Situation) handling $1B/year transaction volume (Task); introduced Idempotency Keys and Distributed Locks (Action) to eliminate double-payment errors, achieving 99.999% financial accuracy (Result)."
         
         Language: Chinese (Simplified).
         """

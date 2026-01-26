@@ -1,5 +1,5 @@
-﻿tunnel: 26547601-f8fc-47a8-b7dd-bb590b615ae2
-credentials-file: C:\\Users\\52648\\.cloudflared\\26547601-f8fc-47a8-b7dd-bb590b615ae2.json
+﻿tunnel: a1e3c87f-02c1-473c-8311-1e09c74661cd
+credentials-file: C:\\Users\\52648\\.cloudflared\\a1e3c87f-02c1-473c-8311-1e09c74661cd.json
 
 ingress:
   # FastAPI Backend (Specific Paths)
@@ -16,8 +16,23 @@ ingress:
     path: /openapi.json
     service: http://localhost:8000
 
+  - hostname: dev.bmwuv.com
+    path: /analyze
+    service: http://localhost:8000
+  - hostname: dev.bmwuv.com
+    path: /health
+    service: http://localhost:8000
+  - hostname: dev.bmwuv.com
+    path: /docs
+    service: http://localhost:8000
+  - hostname: dev.bmwuv.com
+    path: /openapi.json
+    service: http://localhost:8000
+
   # Streamlit Web App (Root & Assets)
   - hostname: bmwuv.com
+    service: http://localhost:8501
+  - hostname: dev.bmwuv.com
     service: http://localhost:8501
 
   # Catch-all
