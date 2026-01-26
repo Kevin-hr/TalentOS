@@ -31,9 +31,9 @@ ingress:
 
   # Streamlit Web App (Root & Assets)
   - hostname: bmwuv.com
-    service: http://localhost:8501
+    service: http://localhost:8502
   - hostname: dev.bmwuv.com
-    service: http://localhost:8501
+    service: http://localhost:8502
 
   # Catch-all
   - service: http_status:404
