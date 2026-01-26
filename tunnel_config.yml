@@ -29,11 +29,11 @@ ingress:
     path: /openapi.json
     service: http://localhost:8000
 
-  # Streamlit Web App (Root & Assets)
+  # React Web App (Root & Assets)
   - hostname: bmwuv.com
-    service: http://localhost:8502
+    service: http://localhost:8501
   - hostname: dev.bmwuv.com
-    service: http://localhost:8502
+    service: http://localhost:8501
 
   # Catch-all
   - service: http_status:404
