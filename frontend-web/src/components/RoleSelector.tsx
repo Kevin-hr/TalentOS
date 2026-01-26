@@ -72,10 +72,6 @@ export function RoleSelector({ onStart }: RoleSelectorProps) {
   const featuresRef = useRef<HTMLElement>(null);
   const pricingRef = useRef<HTMLElement>(null);
 
-  const scrollToSection = (ref: React.RefObject<HTMLElement>) => {
-    ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
   return (
     <div className="min-h-screen bg-[#F3F4EF] text-[#111111] font-sans selection:bg-[#F54E00]/20">
       {/* Navigation */}

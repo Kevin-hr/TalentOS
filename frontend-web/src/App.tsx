@@ -1,12 +1,10 @@
-import { useState, type ComponentPropsWithoutRef, useEffect } from "react";
+import { useState, type ComponentPropsWithoutRef } from "react";
 import ReactMarkdown from "react-markdown";
 import { FileUpload } from "@/components/FileUpload";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import {
   ChevronRight,
-  FileText,
-  RefreshCw,
   Upload,
   Target,
   Zap,
@@ -20,8 +18,6 @@ import LinearPreview from "@/components/LinearPreview";
 import { useAnalyzeStream } from "@/hooks/useAnalyzeStream";
 import ThumbnailPreview from "@/components/ThumbnailPreview";
 import { RoleSelector } from "@/components/RoleSelector";
-import { SmartSearch } from "@/components/CandidateSearch";
-import { ErrorDisplay } from "@/components/ErrorDisplay";
 import { SkillRadar } from "@/components/SkillRadar";
 import { SalaryAnalysis } from "@/components/SalaryAnalysis";
 import { UpgradeModal } from "@/components/UpgradeModal";
@@ -133,7 +129,6 @@ function App() {
       score: 86,
     };
   });
-  const [validationError, setValidationError] = useState("");
   const [activeTab, setActiveTab] = useState<"analyze" | "search" | "profile">(() => {
     const params = new URLSearchParams(window.location.search);
     const tab = params.get("tab");
@@ -153,13 +148,8 @@ function App() {
     return params.get("interview") === "1";
   });
 
-  const { streamedContent, isStreaming, error, analyzeStream, reset } =
+  const { streamedContent, isStreaming, analyzeStream, reset } =
     useAnalyzeStream();
-
-  const handleRetry = () => {
-    setValidationError("");
-    reset();
-  };
 
   const handleProFeature = (trigger: "optimize" | "salary" | "export") => {
     setUpgradeTrigger(trigger);
@@ -174,7 +164,6 @@ function App() {
     setJdInputMode("file");
     setPersona("strict");
     setResult(null);
-    setValidationError("");
     setActiveTab("analyze");
     reset();
   };
@@ -227,7 +216,6 @@ function App() {
 
     if (!fileToUpload) return; // Should not happen with mock
 
-    setValidationError("");
     const formData = new FormData();
     formData.append("resume_file", fileToUpload);
     if (jdFile) {
