@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.1.0] - 2026-01-26
+
+### 🎨 Visual Overhaul: "Hog Style" (DESIGN FREEZE)
+- **Status**: The visual system is now locked. No further style changes are permitted without approval.
+- **Rebranding**: Transitioned from "Apple Style" to **"PostHog-Inspired" (Hog Style)** design language.
+- **Design Tokens**:
+  - Background: `#F3F4EF` (Tan)
+  - Primary: `#1D4AFF` (Blue)
+  - Accent: `#F54E00` (Orange)
+  - Shadows: Hard retro shadows (`4px 4px 0px black`).
+- **Component Updates**:
+  - `Button`: Now uses hard borders, `rounded-md`, and retro shadows.
+  - `Card`: Removed glassmorphism; added solid white background with hard borders.
+  - `MobileHomeView`: Removed gradients, updated typography to be bolder and more "engineer-centric".
+
 ## [3.0.0] - 2026-01-15
 
 ### Features

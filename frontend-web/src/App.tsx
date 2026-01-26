@@ -27,6 +27,7 @@ import { SalaryAnalysis } from "@/components/SalaryAnalysis";
 import { UpgradeModal } from "@/components/UpgradeModal";
 import { InterviewModal } from "@/components/InterviewModal";
 import { Zap as ZapIcon, FileEdit, Send } from "lucide-react";
+import { MobileBottomNav } from "@/components/MobileBottomNav";
 
 interface AnalysisResult {
   report: string;
@@ -133,9 +134,10 @@ function App() {
     };
   });
   const [validationError, setValidationError] = useState("");
-  const [activeTab, setActiveTab] = useState<"analyze" | "search">(() => {
+  const [activeTab, setActiveTab] = useState<"analyze" | "search" | "profile">(() => {
     const params = new URLSearchParams(window.location.search);
-    return params.get("tab") === "search" ? "search" : "analyze";
+    const tab = params.get("tab");
+    return (tab === "search" || tab === "profile") ? tab : "analyze";
   });
 
   // Pro Features State
@@ -266,171 +268,175 @@ function App() {
     const [showJdInput, setShowJdInput] = useState(false);
 
     return (
-      <div className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F] font-sans selection:bg-black/10 pb-28">
-        {/* Background Gradient */}
-        <div className="fixed inset-0 z-0 pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-b from-white/40 to-transparent" />
-        </div>
+      <div className="min-h-screen bg-[#F3F4EF] text-[#111111] font-sans selection:bg-black/10 pb-28">
+        {/* Header: Logo + Slogan (Semantic HTML) */}
+        <header className="relative z-10 px-5 pt-6 flex flex-col items-center text-center space-y-3">
+          <h1 className="text-4xl font-extrabold tracking-tight text-black">TalentOS</h1>
+          <p className="text-sm font-bold text-gray-600 mt-1">DON'T APPLY. DOMINATE.</p>
+        </header>
 
-        <div className="relative z-10 px-5 pt-6 space-y-6">
-          {/* Header: Logo + Slogan */}
-          <header className="flex flex-col items-center text-center space-y-3">
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight">TalentOS</h1>
-              <p className="text-sm text-gray-500 mt-1">别海投，用算法重构职业路径</p>
-            </div>
-          </header>
-
-          {/* 核心功能区 */}
-          <div className="space-y-4">
-            {/* 简历上传 - 最大按钮 */}
-            <div className="bg-white rounded-3xl shadow-lg shadow-black/5 p-6 space-y-4">
-              <div className="flex items-center justify-between">
-                <h2 className="font-bold text-lg flex items-center gap-2">
-                  <Upload className="w-5 h-5" />
-                  上传简历
-                </h2>
-                <span className="text-xs text-gray-400">PDF/DOCX</span>
-              </div>
-              <FileUpload
-                onFileSelect={(f) => {
-                  setFile(f);
-                  setResult(null);
-                }}
-                selectedFile={file}
-                onClear={() => {
-                  setFile(null);
-                  setResult(null);
-                }}
-              />
-            </div>
-
-            {/* 目标职位 - 可折叠 */}
-            <div className="bg-white rounded-3xl shadow-lg shadow-black/5 overflow-hidden">
-              <button
-                onClick={() => setShowJdInput(!showJdInput)}
-                className="w-full p-5 flex items-center justify-between text-left"
-              >
-                <h2 className="font-bold text-lg flex items-center gap-2">
-                  <Target className="w-5 h-5" />
-                  目标职位
-                  {!showJdInput && <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full ml-2">可选</span>}
-                </h2>
-                <ChevronRight className={`w-5 h-5 text-gray-400 transition-transform ${showJdInput ? "rotate-90" : ""}`} />
-              </button>
-
-              {showJdInput && (
-                <div className="px-5 pb-5 space-y-4 border-t border-gray-50 pt-4">
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => setJdInputMode("text")}
-                      className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors ${
-                        jdInputMode === "text" ? "bg-black text-white" : "bg-gray-100 text-gray-600"
-                      }`}
-                    >
-                      粘贴JD
-                    </button>
-                    <button
-                      onClick={() => setJdInputMode("file")}
-                      className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors ${
-                        jdInputMode === "file" ? "bg-black text-white" : "bg-gray-100 text-gray-600"
-                      }`}
-                    >
-                      上传文件
-                    </button>
-                  </div>
-
-                  {jdInputMode === "file" ? (
-                    <FileUpload
-                      onFileSelect={(f) => {
-                        setJdFile(f);
-                        setJdText("");
-                      }}
-                      selectedFile={jdFile}
-                      onClear={() => setJdFile(null)}
-                      label="拖放JD文件到此处"
-                    />
-                  ) : (
-                    <textarea
-                      className="w-full h-28 p-4 rounded-2xl bg-gray-50 border border-gray-100 focus:border-black/20 resize-none text-sm"
-                      placeholder="粘贴职位描述..."
-                      value={jdText}
-                      onChange={(e) => {
-                        setJdText(e.target.value);
-                        setJdFile(null);
-                      }}
-                    />
-                  )}
+        <main className="relative z-10 px-5 pt-6 space-y-6">
+          {activeTab === "analyze" && (
+            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
+              {/* 简历上传 */}
+              <section className="bg-white rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="font-bold text-lg flex items-center gap-2">
+                    <Upload className="w-5 h-5" />
+                    上传简历
+                  </h2>
+                  <span className="text-xs font-mono bg-yellow-200 border border-black px-1">PDF/DOCX</span>
                 </div>
-              )}
-            </div>
-          </div>
+                <FileUpload
+                  onFileSelect={(f) => {
+                    setFile(f);
+                    setResult(null);
+                  }}
+                  selectedFile={file}
+                  onClear={() => {
+                    setFile(null);
+                    setResult(null);
+                  }}
+                />
+              </section>
 
-          {/* 今日推荐岗位 */}
-          {!showResult && (
-            <div className="space-y-3">
+              {/* 目标职位 */}
+              <section className="bg-white rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+                <button
+                  onClick={() => setShowJdInput(!showJdInput)}
+                  className="w-full p-5 flex items-center justify-between text-left"
+                >
+                  <h2 className="font-bold text-lg flex items-center gap-2">
+                    <Target className="w-5 h-5" />
+                    目标职位
+                    {!showJdInput && <span className="text-xs bg-gray-100 border border-gray-300 text-gray-500 px-2 py-0.5 rounded-md ml-2">可选</span>}
+                  </h2>
+                  <ChevronRight className={`w-5 h-5 text-gray-400 transition-transform ${showJdInput ? "rotate-90" : ""}`} />
+                </button>
+
+                {showJdInput && (
+                  <div className="px-5 pb-5 space-y-4 border-t-2 border-black pt-4">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => setJdInputMode("text")}
+                        className={`flex-1 py-2 rounded-md border-2 border-black text-sm font-bold transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[2px] active:shadow-none ${
+                          jdInputMode === "text" ? "bg-[#1D4AFF] text-white" : "bg-white text-black"
+                        }`}
+                      >
+                        粘贴JD
+                      </button>
+                      <button
+                        onClick={() => setJdInputMode("file")}
+                        className={`flex-1 py-2 rounded-md border-2 border-black text-sm font-bold transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[2px] active:shadow-none ${
+                          jdInputMode === "file" ? "bg-[#1D4AFF] text-white" : "bg-white text-black"
+                        }`}
+                      >
+                        上传文件
+                      </button>
+                    </div>
+
+                    {jdInputMode === "file" ? (
+                      <FileUpload
+                        onFileSelect={(f) => {
+                          setJdFile(f);
+                          setJdText("");
+                        }}
+                        selectedFile={jdFile}
+                        onClear={() => setJdFile(null)}
+                        label="拖放JD文件到此处"
+                      />
+                    ) : (
+                      <textarea
+                        className="w-full h-28 p-4 rounded-md bg-white border-2 border-black focus:ring-2 focus:ring-[#1D4AFF] resize-none text-sm font-mono"
+                        placeholder="粘贴职位描述..."
+                        value={jdText}
+                        onChange={(e) => {
+                          setJdText(e.target.value);
+                          setJdFile(null);
+                        }}
+                      />
+                    )}
+                  </div>
+                )}
+              </section>
+
+              {/* Start Diagnosis Button (Floating for easy access) */}
+              <div className="pt-4 pb-20">
+                <Button
+                  size="lg"
+                  className="w-full h-14 text-lg rounded-md bg-[#F54E00] text-white hover:bg-[#F54E00]/90 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-2 border-black transition-all active:translate-y-[2px] active:shadow-none"
+                  disabled={isStreaming || !file}
+                  onClick={handleAnalyze}
+                >
+                  {isStreaming ? (
+                    <div className="flex items-center gap-3">
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <span>正在分析...</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <Zap className="w-5 h-5" />
+                      <span className="font-black">{!file ? "请先上传简历" : "开始诊断"}</span>
+                      <ChevronRight className="w-5 h-5" />
+                    </div>
+                  )}
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "search" && (
+            <div className="space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-300 pb-20">
               <div className="flex items-center justify-between">
                 <h2 className="font-bold text-lg flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-yellow-500" />
+                  <Sparkles className="w-5 h-5 text-[#F54E00]" />
                   今日推荐
                 </h2>
-                <button className="text-sm text-gray-500 flex items-center gap-1">
-                  更多 <ArrowRight className="w-4 h-4" />
-                </button>
               </div>
               <div className="space-y-3">
                 {RECOMMENDED_JOBS.map((job) => (
-                  <div
+                  <article
                     key={job.id}
-                    className="bg-white rounded-2xl p-4 shadow-md shadow-black/5 hover:shadow-lg transition-shadow"
+                    className="bg-white rounded-xl border-2 border-black p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all"
                   >
                     <div className="flex items-start justify-between mb-2">
                       <div>
-                        <div className="font-bold text-gray-900">{job.title}</div>
-                        <div className="text-sm text-gray-500">{job.company}</div>
+                        <h3 className="font-bold text-black text-lg">{job.title}</h3>
+                        <div className="text-sm font-medium text-gray-600">{job.company}</div>
                       </div>
                       <div className="text-right">
-                        <div className="text-sm font-bold text-green-600">{job.match}% 匹配</div>
+                        <div className="text-sm font-black text-[#F54E00] bg-[#F54E00]/10 px-2 py-1 rounded-md border border-[#F54E00]">{job.match}% 匹配</div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3 text-xs text-gray-400 mb-3">
+                    <div className="flex items-center gap-3 text-xs font-mono text-gray-500 mb-3">
                       <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{job.location}</span>
                       <span className="flex items-center gap-1"><DollarSign className="w-3 h-3" />{job.salary}</span>
                     </div>
                     <div className="flex gap-2">
                       {job.tags.map((tag) => (
-                        <span key={tag} className="text-xs px-2 py-1 bg-gray-100 rounded-full text-gray-600">{tag}</span>
+                        <span key={tag} className="text-xs px-2 py-1 bg-gray-100 border border-gray-300 rounded-md text-gray-700 font-medium">{tag}</span>
                       ))}
                     </div>
-                  </div>
+                  </article>
                 ))}
               </div>
             </div>
           )}
-        </div>
 
-        {/* 吸底诊断按钮 */}
-        <div className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#F5F5F7] via-[#F5F5F7] to-transparent">
-          <Button
-            size="lg"
-            className="w-full h-14 text-lg rounded-2xl bg-black hover:bg-gray-800 shadow-xl shadow-black/20"
-            disabled={isStreaming || !file}
-            onClick={handleAnalyze}
-          >
-            {isStreaming ? (
-              <div className="flex items-center gap-3">
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                <span>正在分析...</span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <Zap className="w-5 h-5" />
-                <span className="font-bold">{!file ? "请先上传简历" : "开始诊断"}</span>
-                <ChevronRight className="w-5 h-5" />
-              </div>
-            )}
-          </Button>
-        </div>
+          {activeTab === "profile" && (
+             <div className="flex flex-col items-center justify-center h-64 text-center space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center border-2 border-black">
+                   <Briefcase className="w-8 h-8 text-gray-500" />
+                </div>
+                <div>
+                   <h3 className="text-xl font-bold">个人中心</h3>
+                   <p className="text-gray-500 text-sm">开发中...</p>
+                </div>
+             </div>
+          )}
+        </main>
+
+        <MobileBottomNav activeTab={activeTab} onTabChange={setActiveTab} />
       </div>
     );
   };

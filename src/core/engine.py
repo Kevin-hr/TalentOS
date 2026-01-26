@@ -39,6 +39,8 @@ from src.plugins.llm_providers import get_provider as get_llm_provider
 from src.plugins.document_parsers import get_parser_for_file
 from src.plugins.storage import get_storage
 from src.plugins.vector_stores.simple_store import SimpleVectorStore
+from src.core.diagnosis_engine import DiagnosisEngine, DiagnosisResult
+from src.core.star_rewriter import STARRewriter
 
 
 @dataclass
@@ -1168,6 +1170,22 @@ OUTPUT REQUIREMENTS (Markdown Format):
         return status
 
     # --- RAG Features ---
+
+    def diagnose_resume_v2(self, resume_text: str, jd_text: str) -> DiagnosisResult:
+        """
+        Deep Diagnosis using DiagnosisEngine (V2).
+        """
+        if not self.diagnosis_engine:
+            raise TalentOSError("DiagnosisEngine not initialized")
+        return self.diagnosis_engine.diagnose(resume_text, jd_text)
+
+    def rewrite_bullet_star(self, bullet_text: str, jd_text: str) -> str:
+        """
+        Rewrite bullet point using STAR method.
+        """
+        if not self.star_rewriter:
+            raise TalentOSError("STARRewriter not initialized")
+        return self.star_rewriter.rewrite_bullet(bullet_text, jd_text)
 
     def index_resume(self, resume_text: str, metadata: Dict[str, Any] = None) -> bool:
         """

@@ -11,19 +11,19 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         className={cn(
-          "inline-flex items-center justify-center rounded-full font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 active:scale-95 cursor-pointer",
+          "inline-flex items-center justify-center rounded-md font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 active:translate-y-[2px] active:shadow-none cursor-pointer border-2 border-black",
           {
-            "bg-[#007AFF] text-white hover:bg-[#0062CC] shadow-md hover:shadow-lg":
+            "bg-[#1D4AFF] text-white hover:bg-[#1D4AFF]/90 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]":
               variant === "primary",
-            "bg-white text-[#1D1D1F] border border-gray-200 hover:bg-gray-50 shadow-sm":
+            "bg-white text-black hover:bg-gray-50 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]":
               variant === "secondary",
-            "border border-input bg-background hover:bg-accent hover:text-accent-foreground":
+            "bg-transparent hover:bg-accent hover:text-accent-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]":
               variant === "outline",
-            "hover:bg-gray-100 text-gray-600": variant === "ghost",
+            "hover:bg-gray-100 text-gray-600 border-transparent shadow-none": variant === "ghost",
             "h-10 px-6 py-2 text-sm": size === "default",
             "h-8 px-3 text-xs": size === "sm",
             "h-12 px-8 text-base": size === "lg",
-            "h-10 w-10": size === "icon",
+            "h-10 w-10 p-0": size === "icon",
           },
           className,
         )}

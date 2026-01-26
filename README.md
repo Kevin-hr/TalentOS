@@ -127,6 +127,7 @@ pnpm dev
 ## 🛠️ 技术栈 (Tech Stack)
 
 *   **Backend**: Python 3.9+, FastAPI, Pydantic
-*   **Frontend**: React 18, TypeScript, TailwindCSS, Lucide Icons
+*   **Frontend**: React 18, TypeScript, TailwindCSS v4
+*   **Design System**: **"Hog Style"** (PostHog-inspired Retro/Bold UI)
 *   **AI Engine**: DeepSeek-V3 (Reasoning Mode), OpenAI
 *   **Parsing**: pdfplumber, python-docx, MarkItDown (Planned)

@@ -4,6 +4,21 @@
 > **Status**: Strategic Planning
 > **Owner**: TalentOS China Team
 > **Philosophy**: 本土化、结果导向、私域运营
+> **Visual Style**: **PostHog-Inspired (Retro-Modern / Engineer-Centric)**
+
+---
+
+## 0. Design System & UX Identity
+> **"Not another boring SaaS."**
+> **STATUS: FROZEN.** The "Hog Style" implementation is complete.
+
+*   **Core Vibe**: 极客、复古、直接、有趣 (Quirky & Bold)。
+*   **Visual Language**:
+    *   **Background**: 暖色调米白 (`#F3F4EF`)，拒绝冷淡的纯白/灰。
+    *   **Colors**: 高饱和度的 **PostHog Blue (`#1D4AFF`)** 和 **Hog Orange (`#F54E00`)**。
+    *   **Elements**: 硬朗的边框 (Hard Borders)、复古硬阴影 (Retro Shadows, no blur)、像素风图标。
+    *   **Typography**: 粗犷的标题字体，高密度的信息展示。
+*   **Reference**: 详见 [Frontend Design System](./frontend_design_system.md)。
 
 ---
 

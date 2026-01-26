@@ -1,15 +1,23 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #007AFF; /* Apple Blue */
-  --color-background: #F5F5F7; /* Apple Gray */
+  /* PostHog "Hog Style" Palette */
+  --color-primary: #1D4AFF; /* PostHog Blue */
+  --color-accent: #F54E00; /* Hog Orange */
+  --color-background: #F3F4EF; /* PostHog Tan */
   --color-surface: #FFFFFF;
+  --color-border: #2D2D2D; /* Dark Gray for high contrast borders */
+  
+  /* Retro Shadows */
+  --shadow-retro: 4px 4px 0px 0px rgba(0,0,0,1);
+  --shadow-retro-sm: 2px 2px 0px 0px rgba(0,0,0,1);
 }
 
 :root {
+  /* Bold, high contrast typography */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--color-background);
-  color: #1D1D1F;
+  color: #111111; /* Near Black */
 }
 
 body {
