@@ -18,12 +18,23 @@ jobs:
       with:
         node-version: '20'
         
-    - name: Install Dependencies
+    - name: Install dependencies
       run: |
         cd frontend-web
         npm ci
-        
-    - name: Verify Build
+
+    - name: Lint Code
+      run: |
+        cd frontend-web
+        npm run lint
+
+    - name: Build Project
       run: |
         cd frontend-web
         npm run build
+
+    - name: Run Tests (Optional)
+      continue-on-error: true
+      run: |
+        cd frontend-web
+        npm run test -- run

@@ -1,0 +1,8 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#F3F4EF"/>
+  <rect x="40" y="40" width="1120" height="550" rx="20" fill="white" stroke="black" stroke-width="8"/>
+  <path d="M1160 590H40V630H1160V590Z" fill="black" fill-opacity="0.2"/>
+  <text x="600" y="280" font-family="sans-serif" font-weight="900" font-size="120" text-anchor="middle" fill="black">TalentOS</text>
+  <text x="600" y="380" font-family="sans-serif" font-weight="bold" font-size="48" text-anchor="middle" fill="#F54E00">DON'T APPLY. DOMINATE.</text>
+  <rect x="520" y="450" width="160" height="10" fill="#1D4AFF"/>
+</svg>
