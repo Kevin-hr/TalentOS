@@ -8,7 +8,6 @@ ENV PYTHONUNBUFFERED=1
 # Install system dependencies (including Tesseract and Poppler for OCR)
 RUN apt-get update && apt-get install -y \
     tesseract-ocr \
-    tesseract-ocr-chi-sim \
     poppler-utils \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
