@@ -228,7 +228,11 @@ function App() {
       <div className="min-h-screen bg-[#F3F4EF] text-[#111111] font-sans selection:bg-black/10 pb-28">
         {/* Header: Logo + Slogan (Semantic HTML) */}
         <header className="relative z-10 px-5 pt-8 pb-4 flex flex-col items-center text-center space-y-4">
-          <h1 className="text-5xl font-black tracking-tighter text-black italic">TalentOS</h1>
+          <div className="flex items-center justify-end w-full">
+            <button className="px-6 py-2 rounded-md bg-[#1D4AFF] text-white text-sm font-bold hover:bg-[#1D4AFF]/90 transition-all border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-y-[2px] active:shadow-none">
+              登录
+            </button>
+          </div>
 
           <div className="space-y-4 max-w-sm mx-auto">
             <h2 className="text-2xl font-black leading-tight text-black">
