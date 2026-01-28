@@ -9,3 +9,8 @@ fastapi
 uvicorn
 python-multipart
 supabase
+numpy
+pydantic
+uvicorn[standard]
+dnspython
+email-validator
