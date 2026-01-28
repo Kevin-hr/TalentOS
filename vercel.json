@@ -6,7 +6,7 @@
   "rewrites": [
     { 
       "source": "/api/(.*)", 
-      "destination": "https://talentos-production-9040.up.railway.app/$1" 
+      "destination": "https://talentos-production-35e8.up.railway.app/$1" 
     },
     { 
       "source": "/(.*)", 
