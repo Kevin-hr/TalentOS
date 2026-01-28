@@ -76,8 +76,7 @@ export function RoleSelector({ onStart }: RoleSelectorProps) {
     <div className="min-h-screen bg-[#F3F4EF] text-[#111111] font-sans selection:bg-[#F54E00]/20">
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#F3F4EF]/90 backdrop-blur-md border-b-2 border-black">
-        <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto w-full">
-          <div className="font-black text-xl tracking-tight">TalentOS</div>
+        <div className="flex items-center justify-end px-6 py-4 max-w-7xl mx-auto w-full">
           <button className="px-6 py-2 rounded-md bg-[#1D4AFF] text-white text-sm font-bold hover:bg-[#1D4AFF]/90 transition-all border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-y-[2px] active:shadow-none">
             登录
           </button>
