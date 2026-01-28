@@ -1,13 +1,21 @@
-# Debug Log - Frontend Not Updating Issue
-**Date**: 2026-01-26
-**Objective**: Fix the issue where `https://bmwuv.com` serves stale content while `localhost` appears updated.
-**Methodology**: First Principles Debugging (Source -> Local Server -> Tunnel -> Network -> Edge).
+# Debug Log - Production 404 DEPLOYMENT_NOT_FOUND
 
-## 1. Initial State Assessment
-- **Symptom**: User sees "Career Hacker" (Old) on public domain. Expects "Jin Qiang Da Shu" / "Don't Search" (New).
-- **Hypothesis A**: Local server is not actually serving new content (Build artifact stale?).
-- **Hypothesis B**: Cloudflare Tunnel is pointing to wrong port.
-- **Hypothesis C**: Cloudflare Tunnel process did not reload config.
-- **Hypothesis D**: Caching (Browser or Cloudflare).
+> **🚨 STATUS UPDATE**: User reports `https://bmwuv.com` returns Vercel 404 `DEPLOYMENT_NOT_FOUND`.
+> **Date**: 2026-01-28 18:31
 
-## 2. Investigation Actions
+## 1. Problem Signal
+*   **URL**: `https://bmwuv.com`
+*   **Error**: `404: NOT_FOUND`
+*   **Code**: `DEPLOYMENT_NOT_FOUND`
+*   **ID**: `hkg1::cqjz7-1769596273881-a37c28b6fd8b`
+
+## 2. Diagnosis
+*   **What this means**: The Request successfully reached Vercel's edge network (Region: `hkg1` - Hong Kong).
+*   **Why it fails**: Vercel received the request for `bmwuv.com` but could not match it to any active Deployment in the configured Project.
+*   **Root Cause**: The domain `bmwuv.com` is configured in Cloudflare to point to Vercel (CNAME), but it is **NOT** configured in the Vercel Project Settings as a Custom Domain.
+
+## 3. Action Plan
+1.  **Go to Vercel Dashboard**: Open the TalentOS project.
+2.  **Settings -> Domains**: Check if `bmwuv.com` is listed.
+3.  **Add Domain**: If missing, add `bmwuv.com`.
+4.  **Verify**: Wait for Vercel to verify the existing CNAME record (which seems to be already pointing there, given it hits Vercel).

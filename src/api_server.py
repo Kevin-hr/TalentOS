@@ -61,6 +61,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.middleware("http")
+async def strip_api_prefix(request, call_next):
+    """Strip /api prefix from path if present."""
+    if request.url.path.startswith("/api"):
+        scope = request.scope
+        scope["path"] = scope["path"][4:] # Remove /api
+        if scope["path"] == "":
+            scope["path"] = "/"
+    response = await call_next(request)
+    return response
+
 # --- Pydantic Models ---
 
 class AnalysisResponse(BaseModel):

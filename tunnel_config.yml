@@ -1,8 +1,11 @@
-﻿tunnel: a1e3c87f-02c1-473c-8311-1e09c74661cd
-credentials-file: C:\\Users\\52648\\.cloudflared\\a1e3c87f-02c1-473c-8311-1e09c74661cd.json
+﻿tunnel: 50dad855-002d-49b0-b496-d8150470098e
+credentials-file: C:\Users\kevin\.cloudflared\50dad855-002d-49b0-b496-d8150470098e.json
 
 ingress:
   # FastAPI Backend (Specific Paths)
+  - hostname: bmwuv.com
+    path: /api
+    service: http://localhost:8000
   - hostname: bmwuv.com
     path: /analyze
     service: http://localhost:8000
@@ -16,6 +19,9 @@ ingress:
     path: /openapi.json
     service: http://localhost:8000
 
+  - hostname: dev.bmwuv.com
+    path: /api
+    service: http://localhost:8000
   - hostname: dev.bmwuv.com
     path: /analyze
     service: http://localhost:8000
