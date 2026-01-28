@@ -7,7 +7,7 @@
 *   **当前版本**: v3.0.0 (Growth and Refinement)
 *   **代码仓库**: GitHub `TalentOS`
 *   **服务状态**:
-    *   **Production Frontend**: `https://bmwuv.com` (Vercel) - *404 DEPLOYMENT_NOT_FOUND*
+    *   **Production Frontend**: `https://bmwuv.com` (Vercel) - *Redeploying...* (Previous: 404 No Deployment)
     *   **Production Backend**: `https://talentos-production-35e8.up.railway.app` (Railway) - *Online* (Dashboard: [Railway Link](https://railway.com/project/20a2b619-b23b-40e5-9b57-7fc1f81dce08/service/0c65a71e-2920-41d9-9a3c-1d0abfe0afd2?environmentId=023d04f0-0de0-46d2-a3fb-a84d7600f0fd))
     *   Local Frontend: `http://localhost:8501`
     *   Local Backend: `http://localhost:8000`

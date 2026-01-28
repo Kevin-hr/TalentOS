@@ -32,9 +32,9 @@ The system is deployed using a decoupled frontend/backend architecture on cloud 
 ### Correct DNS Records (Cloudflare)
 | Type | Name | Content | Proxy In Use |
 | :--- | :--- | :--- | :--- |
-| **A** | `@` | `76.76.21.21` | DNS Only (Gray Cloud) first |
+| **A** | `@` | `216.198.79.1` | DNS Only (Gray Cloud) first (Vercel New Standard) |
 | **CNAME** | `www` | `cname.vercel-dns.com` | DNS Only (Gray Cloud) first |
-| **A** | (Old) | `216.x.x.x` / `104.x.x.x` | **MUST DELETE** |
+| **A** | (Legacy) | `76.76.21.21` | **Legacy** (Update to 216.198.79.1 recommended) |
 
 ### Backend Environment (Railway)
 *   **Python Version**: 3.10+
